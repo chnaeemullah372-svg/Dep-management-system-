@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Victim Template System</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+<div id="loginScreen" class="login-screen">
+  <div class="login-box">
+    <h1>Victim Template System</h1>
+    <p>Admin Login</p>
+    <input id="loginUser" placeholder="Username">
+    <input id="loginPass" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <small>admin / admin123</small>
+    <div id="loginMsg" class="msg"></div>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+  <header>
+    <button class="menu" onclick="toggleNav()">☰</button>
+    <b>Victim Template System</b>
+    <button onclick="logout()" class="logout">Logout</button>
+  </header>
+
+  <nav id="nav">
+    <button onclick="openTab('adminTemplates')">Admin: Templates</button>
+    <button onclick="openTab('adminDesigner')">Admin: Designer</button>
+    <button onclick="openTab('userEntry')">User: Data Entry</button>
+    <button onclick="openTab('previewExport')">Preview / Export</button>
+  </nav>
+
+  <main>
+    <section id="adminTemplates" class="tab">
+      <h2>Admin Templates</h2>
+      <div class="card">
+        <h3>Create / Edit Template</h3>
+        <input id="templateName" placeholder="Template name e.g. Template 1">
+        <input id="templateCapacity" type="number" min="1" value="4" placeholder="Persons per page">
+        <label>Blank JPG/PNG background</label>
+        <input id="templateBg" type="file" accept="image/*">
+        <button onclick="saveTemplate()">Save Template</button>
+        <button onclick="newTemplate()">New Template</button>
+      </div>
+
+      <div class="card">
+        <h3>Fields</h3>
+        <p class="hint">Admin یہاں fields add کرے گا۔ User کو صرف وہ fields نظر آئیں گی جو template میں use ہوں گی۔</p>
+        <div class="row">
+          <input id="fieldName" placeholder="New field name">
+          <select id="fieldType">
+            <option value="text">Text</option>
+            <option value="image">Image</option>
+          </select>
+          <button onclick="addField()">Add Field</button>
+        </div>
+        <div id="fieldList"></div>
+      </div>
+
+      <div class="card">
+        <h3>Saved Templates</h3>
+        <div id="templateList"></div>
+      </div>
+    </section>
+
+    <section id="adminDesigner" class="tab hidden">
+      <h2>Admin Designer</h2>
+      <div class="card">
+        <div class="row">
+          <select id="designTemplate" onchange="loadTemplateForDesign()"></select>
+          <select id="designPerson" onchange="renderDesigner()"></select>
+          <select id="designField"></select>
+          <button onclick="addBox()">Add Field Box</button>
+          <button onclick="saveAll()">Save Layout</button>
+          <button class="danger" onclick="deleteBox()">Delete Selected</button>
+        </div>
+        <p class="hint">Person 1, Person 2, Person 3 کی ہر field کی الگ الگ position set کریں۔ Box کو drag/resize کریں۔</p>
+      </div>
+
+      <div class="designer-scroll">
+        <div id="designer" class="canvas"></div>
+      </div>
+
+      <div id="boxSettings" class="card hidden">
+        <h3>Selected Field Settings</h3>
+        <div class="grid">
+          <label>Label <input id="sLabel" oninput="updateBox()"></label>
+          <label>Font Size <input id="sFont" type="number" oninput="updateBox()"></label>
+          <label>Color <input id="sColor" type="color" oninput="updateBox()"></label>
+          <label>Bold <input id="sBold" type="checkbox" onchange="updateBox()"></label>
+          <label>Align
+            <select id="sAlign" onchange="updateBox()">
+              <option value="left">Left</option><option value="center">Center</option><option value="right">Right</option>
+            </select>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <section id="userEntry" class="tab hidden">
+      <h2>User Data Entry</h2>
+      <div class="card row">
+        <select id="entryTemplate" onchange="renderPersons()"></select>
+        <button onclick="addPerson()">Add Person</button>
+        <button class="danger" onclick="clearPersons()">Reset Data</button>
+      </div>
+      <div id="persons"></div>
+    </section>
+
+    <section id="previewExport" class="tab hidden">
+      <h2>Preview / Export</h2>
+      <div class="card row">
+        <button onclick="renderPreview()">Refresh Preview</button>
+        <button onclick="downloadPDF()">Download PDF</button>
+        <button onclick="downloadJPG()">Download JPG Pages</button>
+      </div>
+      <div id="preview"></div>
+    </section>
+  </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
